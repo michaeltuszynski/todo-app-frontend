@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-type Todo = {
+export type Todo = {
     _id: string;
     title: string;
     completed: boolean;
