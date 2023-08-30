@@ -9,7 +9,7 @@ import {
 
 function RedirectToNewPath() {
   let navigate = useNavigate();
-  navigate(`http://${process.env.REACT_APP_BACKEND_URL}/health`);
+  navigate(`http://${process.env.REACT_APP_BACKEND_URI}/health`);
   return null;
 }
 
