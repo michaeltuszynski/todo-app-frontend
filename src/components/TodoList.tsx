@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TodoItem from './TodoItem';
 
+const BACKEND_URI = process.env.REACT_APP_BACKEND_URI || 'localhost:5000';
+
 type Todo = {
     _id: string;
     title: string;
@@ -14,14 +16,14 @@ const TodoList: React.FC = () => {
 
     useEffect(() => {
         async function fetchTodos() {
-            const response = await axios.get<Todo[]>('http://localhost:5000/todos');
+            const response = await axios.get<Todo[]>(`http://${BACKEND_URI}/todos`);
             setTodos(response.data);
         }
         fetchTodos();
     }, []);
 
     const addTodo = async () => {
-        const response = await axios.post<Todo>('http://localhost:5000/todos', { title });
+        const response = await axios.post<Todo>(`http://${BACKEND_URI}/todos`, { title });
         setTodos([...todos, response.data]);
         setTitle('');
     };
