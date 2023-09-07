@@ -1,30 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TodoList from './components/TodoList';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate
-} from 'react-router-dom';
+import { Config } from './components/configTypes';
 
-function RedirectToNewPath() {
-  let navigate = useNavigate();
-  navigate(`http://${process.env.REACT_APP_BACKEND_URI}/health`);
-  return null;
-}
+const App: React.FC = () => {
+  const [config, setConfig] = useState<Config | null>(null);
 
+  useEffect(() => {
+    fetch('config.json')
+      .then(response => response.json())
+      .then((data: Config) => setConfig(data));
+  }, []);
 
-export const App = () => {
+  const apiEndpoint = config?.REACT_APP_BACKEND_URI || "";
+
   return (
     <div className="App">
-      <TodoList />
-
-      <Router>
-        <Routes>
-          <Route path="/health" element={<RedirectToNewPath />} />
-        </Routes>
-      </Router>
-
+      <TodoList apiEndpoint={apiEndpoint}/>
     </div>
   );
 }

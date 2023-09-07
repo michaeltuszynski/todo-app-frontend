@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const BACKEND_URI = process.env.REACT_APP_BACKEND_URI || 'localhost:5000';
-
 export type Todo = {
     _id: string;
     title: string;
@@ -13,15 +11,16 @@ type TodoItemProps = {
     todo: Todo;
     onTodoUpdate: (id: string, updatedTodo: Todo) => void;
     onDelete: (id: string) => void;
+    apiEndpoint: string;
 };
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, onTodoUpdate, onDelete }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onTodoUpdate, onDelete, apiEndpoint }) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [editedTitle, setEditedTitle] = useState<string>(todo.title);
 
     const toggleCompleted = async () => {
         const updatedTodo = { ...todo, completed: !todo.completed };
-        await axios.put(`http://${BACKEND_URI}/todos/${todo._id}`, updatedTodo);
+        await axios.put(`http://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
         onTodoUpdate(todo._id, updatedTodo);
     };
 
@@ -31,13 +30,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onTodoUpdate, onDelete }) => 
 
     const handleEdit = async () => {
         const updatedTodo = { ...todo, title: editedTitle };
-        await axios.put(`http://${BACKEND_URI}/todos/${todo._id}`, updatedTodo);
+        await axios.put(`http://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
         onTodoUpdate(todo._id, updatedTodo);
         setIsEditing(false);
     };
 
     const handleDelete = async () => {
-        await axios.delete(`http://${BACKEND_URI}/todos/${todo._id}`);
+        await axios.delete(`http://${apiEndpoint}/todos/${todo._id}`);
         onDelete(todo._id);
     };
 

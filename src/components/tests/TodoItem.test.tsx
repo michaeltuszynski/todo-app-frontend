@@ -9,11 +9,11 @@ jest.mock('axios'); // Mocking axios
 const mockTodo: Todo = {
   _id: '1',
   title: 'Sample Todo',
-  completed: false,
+  completed: false
 };
 
 test('renders todo item', () => {
-  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} />);
+  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} apiEndpoint='' />);
 
   // Assert that the todo title is rendered
   const todoTitleElement = screen.getByText('Sample Todo');
@@ -25,7 +25,7 @@ test('renders todo item', () => {
 });
 
 test('toggles todo completion status', async () => {
-  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} />);
+  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} apiEndpoint='' />);
   const checkboxElement = screen.getByRole('checkbox');
 
   // Simulate clicking the checkbox
@@ -39,7 +39,7 @@ test('toggles todo completion status', async () => {
 });
 
 test('starts editing todo', () => {
-  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} />);
+  render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} apiEndpoint='' />);
   const editButton = screen.getByText('Edit');
 
   // Simulate clicking the edit button
@@ -51,7 +51,7 @@ test('starts editing todo', () => {
 });
 
 test('edits todo item', async () => {
-    render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} />);
+    render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} apiEndpoint='' />);
     const editButton = screen.getByText('Edit');
 
     // Simulate clicking the edit button
@@ -78,7 +78,7 @@ test('edits todo item', async () => {
 });
 
 test('deletes todo item', async () => {
-    render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} />);
+    render(<TodoItem todo={mockTodo} onTodoUpdate={jest.fn()} onDelete={jest.fn()} apiEndpoint=''/>);
     const deleteButton = screen.getByText('Delete');
 
     // Simulate clicking the delete button

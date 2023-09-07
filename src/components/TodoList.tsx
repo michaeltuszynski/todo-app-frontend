@@ -2,28 +2,30 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TodoItem from './TodoItem';
 
-const BACKEND_URI = process.env.REACT_APP_BACKEND_URI || 'localhost:5000';
-
 type Todo = {
     _id: string;
     title: string;
     completed: boolean;
 };
 
-const TodoList: React.FC = () => {
+interface TodoListProps {
+    apiEndpoint: string;
+}
+
+const TodoList: React.FC<TodoListProps> = ({ apiEndpoint }) => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [title, setTitle] = useState<string>('');
 
     useEffect(() => {
         async function fetchTodos() {
-            const response = await axios.get<Todo[]>(`http://${BACKEND_URI}/todos`);
+            const response = await axios.get<Todo[]>(`http://${apiEndpoint}/todos`);
             setTodos(response.data);
         }
         fetchTodos();
-    }, []);
+    });
 
     const addTodo = async () => {
-        const response = await axios.post<Todo>(`http://${BACKEND_URI}/todos`, { title });
+        const response = await axios.post<Todo>(`http://${apiEndpoint}/todos`, { title });
         setTodos([...todos, response.data]);
         setTitle('');
     };
@@ -60,6 +62,7 @@ const TodoList: React.FC = () => {
                         todo={todo}
                         onTodoUpdate={handleTodoUpdate}
                         onDelete={handleDelete}
+                        apiEndpoint={apiEndpoint}
                     />
                 ))}
             </ul>
