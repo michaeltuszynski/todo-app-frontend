@@ -12,7 +12,7 @@ switch (process.env.NODE_ENV) {
 dotenv.config({ path: path })
 
 let configExports = {
-    TODO_APP_BACKEND : `${process.env.TODO_APP_BACKEND}:5000`
+    REACT_APP_BACKEND_URL : `${process.env.REACT_APP_BACKEND_URL}:5000`
 }
 
 export default configExports;

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const BACKEND_URI = process.env.REACT_APP_BACKEND_URI;
-console.log(`BACKEND_URI: ${BACKEND_URI}`);
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+console.log(`BACKEND_URI: ${BACKEND_URL}`);
 
 const health = () => {
-    return axios.get(`http://${BACKEND_URI}/health`)
+    return axios.get(`http://${BACKEND_URL}/health`)
 }
 
 export default health;

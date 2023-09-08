@@ -11,7 +11,7 @@ const App: React.FC = () => {
       .then((data: Config) => setConfig(data));
   }, []);
 
-  const apiEndpoint = config?.REACT_APP_BACKEND_URI || "";
+  const apiEndpoint = config?.REACT_APP_BACKEND_URL || "";
 
   return (
     <div className="App">
