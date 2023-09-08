@@ -12,8 +12,7 @@ switch (process.env.NODE_ENV) {
 dotenv.config({ path: path })
 
 let configExports = {
-    TODO_APP_BACKEND : process.env.TODO_APP_BACKEND,
-    NODEPORT : process.env.NODEPORT
+    TODO_APP_BACKEND : `${process.env.TODO_APP_BACKEND}:5000`
 }
 
 export default configExports;
