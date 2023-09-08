@@ -22,4 +22,8 @@ phases:
 artifacts:
   files:
     - 'build/**/*'
-  base-directory: 'build'
+
+
+cache:
+  paths:
+    - 'node_modules/**/*'
