@@ -21,8 +21,8 @@ phases:
 
 artifacts:
   files:
-    - 'build/**/*'
-  base-directory: '.'
+    - '**/*'
+  base-directory: 'build/'
 
 
 cache:
