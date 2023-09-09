@@ -22,7 +22,7 @@ const TodoList: React.FC<TodoListProps> = ({ apiEndpoint }) => {
             setTodos(response.data);
         }
         fetchTodos();
-    });
+    }, [apiEndpoint]);
 
     const addTodo = async () => {
         const response = await axios.post<Todo>(`https://${apiEndpoint}/todos`, { title });
