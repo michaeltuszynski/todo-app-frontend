@@ -20,7 +20,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onTodoUpdate, onDelete, apiEn
 
     const toggleCompleted = async () => {
         const updatedTodo = { ...todo, completed: !todo.completed };
-        await axios.put(`http://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
+        await axios.put(`https://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
         onTodoUpdate(todo._id, updatedTodo);
     };
 
@@ -30,13 +30,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onTodoUpdate, onDelete, apiEn
 
     const handleEdit = async () => {
         const updatedTodo = { ...todo, title: editedTitle };
-        await axios.put(`http://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
+        await axios.put(`https://${apiEndpoint}/todos/${todo._id}`, updatedTodo);
         onTodoUpdate(todo._id, updatedTodo);
         setIsEditing(false);
     };
 
     const handleDelete = async () => {
-        await axios.delete(`http://${apiEndpoint}/todos/${todo._id}`);
+        await axios.delete(`https://${apiEndpoint}/todos/${todo._id}`);
         onDelete(todo._id);
     };
 

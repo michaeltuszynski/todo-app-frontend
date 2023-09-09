@@ -18,14 +18,14 @@ const TodoList: React.FC<TodoListProps> = ({ apiEndpoint }) => {
 
     useEffect(() => {
         async function fetchTodos() {
-            const response = await axios.get<Todo[]>(`http://${apiEndpoint}/todos`);
+            const response = await axios.get<Todo[]>(`https://${apiEndpoint}/todos`);
             setTodos(response.data);
         }
         fetchTodos();
     });
 
     const addTodo = async () => {
-        const response = await axios.post<Todo>(`http://${apiEndpoint}/todos`, { title });
+        const response = await axios.post<Todo>(`https://${apiEndpoint}/todos`, { title });
         setTodos([...todos, response.data]);
         setTitle('');
     };
