@@ -27,7 +27,7 @@ jobs:
     - name: Create config.json
       run: |
         echo '{
-          "REACT_APP_BACKEND_URL": "https://www.tuzman.com/todos"
+          "REACT_APP_BACKEND_URL": "tuzman.com/todos"
         }' > build/config.json
 
     - name: Deploy to Azure Static Web App
