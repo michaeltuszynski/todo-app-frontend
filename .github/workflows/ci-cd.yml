@@ -28,7 +28,7 @@ jobs:
       run: |
         echo '{
           "REACT_APP_BACKEND_URL": "https://www.tuzman.com/todos"
-        }' > contents/config.json
+        }' > src/config.json
 
     - name: Deploy to Azure Static Web App
       uses: azure/static-web-apps-deploy@v1
