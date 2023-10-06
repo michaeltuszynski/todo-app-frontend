@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '18'
 
@@ -24,9 +24,15 @@ jobs:
     - name: Build
       run: yarn build
 
+    - name: Create config.json
+    run: |
+      echo '{
+        "REACT_APP_BACKEND_URL": "https://www.tuzman.com}/todos"
+      }' > config.json
+
     - name: Deploy to Azure Static Web App
       uses: azure/static-web-apps-deploy@v1
       with:
           azure_static_web_apps_api_token: 54313447c958b13cd5f4a2c7e54a0bc4ba618629f7a3c7f9949282c8c1775b0e3-3874d813-d74d-455e-985d-ccf18a35e27d00f110311
-          repo_token: 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  # Used for GitHub integrations (i.e. PR comments)
+          repo_token: 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  # Used for GitHub integrations (i.e. PR comments)
           action: "upload"
