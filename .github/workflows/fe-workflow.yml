@@ -40,5 +40,5 @@ jobs:
         - name: Upload build folder to GCP bucket
           uses: 'google-github-actions/upload-cloud-storage@v1'
           with:
-            path: 'build'
+            path: 'build/*'
             destination: 'todoapp-static-website-bucket'
