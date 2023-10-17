@@ -8,7 +8,7 @@ on:
 
 jobs:
   push_to_gcp_bucket:
-    name: Build react website
+    name: Build react website for GCP
     runs-on: ubuntu-latest
 
     steps:
