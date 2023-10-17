@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  push_to_gcp_bucket:
+    name: Build and react website
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '18'
+
+        - name: Install dependencies
+          run: yarn install
+
+        - name: Build
+          run: yarn build
+
+        - name: Create config.json
+          run: |
+            echo '{
+              "REACT_APP_BACKEND_URL": "todoapp-api-r32ighfdsq-uc.a.run.app"
+            }' > build/config.json
+
+        - name: Set up Google Cloud SDK
+          uses: google-github-actions/setup-gcloud@v1
+          with:
+            service_account_key: ${{ secrets.GCP_SA_KEY }}
+            project_id: pelagic-sorter-401721
+            export_default_credentials: true
+        - name: Copy files to GCP bucket
+          run: |
+            gsutil rsync -R build/* gs://todoapp-static-website-bucket
+
+
