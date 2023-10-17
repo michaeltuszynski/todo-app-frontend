@@ -37,7 +37,7 @@ jobs:
           with:
             credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-        - id: Upload build folder to GCP bucket
+        - name: Upload build folder to GCP bucket
           uses: 'google-github-actions/upload-cloud-storage@v1'
           with:
             path: 'build'
