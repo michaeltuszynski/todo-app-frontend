@@ -26,18 +26,19 @@ const TodoList: React.FC<TodoListProps> = ({ apiEndpoint }) => {
 
     const addTodo = async () => {
         const response = await axios.post<Todo>(`https://${apiEndpoint}/todos`, { title });
-        setTodos([...todos, response.data]);
+        setTodos(prevTodos => [...prevTodos, response.data]);
         setTitle('');
     };
 
     const handleTodoUpdate = (id: string, updatedTodo: Todo) => {
-        const updatedTodos = todos.map(todo => (todo._id === id ? updatedTodo : todo));
-        setTodos(updatedTodos);
+        setTodos(prevTodos => {
+            return prevTodos.map(todo => (todo._id === id ? updatedTodo : todo));
+        });
     };
 
-    const handleDelete = (id: string) => {
-        const updatedTodos = todos.filter(todo => todo._id !== id);
-        setTodos(updatedTodos);
+    const handleDelete = async (id: string) => {
+        await axios.delete(`https://${apiEndpoint}/todos/${id}`);
+        setTodos(prevTodos => prevTodos.filter(todo => todo._id !== id));
     };
 
     return (
