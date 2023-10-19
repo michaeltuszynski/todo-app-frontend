@@ -24,7 +24,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
 
   const handleSaveClick = async () => {
     try {
-      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
 
   const handleToggleClick = async () => {
     try {
-      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
 
   const handleDeleteClick = async () => {
     try {
-      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {

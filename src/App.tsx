@@ -15,7 +15,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos`);
+        const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`);
         if (!response.ok) {
           throw new Error('Failed to fetch todos');
         }
