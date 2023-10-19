@@ -13,7 +13,7 @@ export const loadConfig = async () => {
         const configJson = await response.json();
         configExports.REACT_APP_BACKEND_URL = `https://${configJson.REACT_APP_BACKEND_URL}`;
     } catch (error) {
-        console.error('Error loading config.json:', error);
+        console.error('Error loading config.json file:', error);
     }
 }
 
