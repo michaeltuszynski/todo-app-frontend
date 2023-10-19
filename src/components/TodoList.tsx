@@ -33,7 +33,7 @@ const TodoList: React.FC<TodoListProps> = ({ backendUrl, onDelete, onToggle, onU
     };
 
     fetchTodos();
-  }, []);
+  }, [backendUrl]);
 
   const handleDelete = (id: string) => {
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
