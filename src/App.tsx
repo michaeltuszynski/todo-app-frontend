@@ -116,15 +116,22 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Todo App</h1>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Add a todo..."
-      />
-      <button onClick={() => addTodo(title)}>Add Todo</button>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Todo App</h1>
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Add a todo..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <div className="input-group-append">
+          <button onClick={() => addTodo(title)} className="btn btn-primary">
+            Add Todo
+          </button>
+        </div>
+      </div>
       <TodoList
         todos={todos}
         onDelete={deleteTodo}
