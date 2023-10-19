@@ -7,7 +7,7 @@ const Health: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`http://${process.env.REACT_APP_BACKEND_URL}/health`)
+        fetch(`https://${process.env.REACT_APP_BACKEND_URL}/health`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok ${error}`);
