@@ -44,4 +44,6 @@ jobs:
           parent: false
           headers: |-
             cache-control: no-cache, no-store, max-age=0, must-revalidate
+          process_gcloudignore: false
+
 
