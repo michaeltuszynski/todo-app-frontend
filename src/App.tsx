@@ -42,9 +42,9 @@ const App: React.FC = () => {
       });
 
       const data = await response.json();
-      setTodos([...todos, data]);
+      //setTodos([...todos, data]);
+      setTodos(prevTodos => [...prevTodos, data]);
       setNewTodo('');
-      fetchTodos();
     } catch (error) {
       console.error("Error adding todo:", error);
     }
