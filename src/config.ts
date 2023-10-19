@@ -2,7 +2,7 @@ let configExports: { REACT_APP_BACKEND_URL?: string } = {};
 
 export const loadConfig = async () => {
     try {
-        const response = await fetch('/config.json');
+        const response = await fetch('config.json');
         if (!response.ok) {
             console.error('Failed to load config.json with status:', response.status);
             return;
