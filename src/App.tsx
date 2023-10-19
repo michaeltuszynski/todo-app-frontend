@@ -14,6 +14,7 @@ const App: React.FC = () => {
   const [configLoaded, setConfigLoaded] = useState(false);
 
   useEffect(() => {
+    console.log("New content!!!");
     loadConfig().then(() => {
       setConfigLoaded(true);
       fetchTodos().then(fetchedTodos => setTodos(fetchedTodos));
