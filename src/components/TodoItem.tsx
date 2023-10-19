@@ -53,7 +53,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
       if (!response.ok) {
         throw new Error('Failed to toggle todo');
       }
-      onToggle(todo.id, todo.completed);
+      onToggle(todo.id, !todo.completed);
     } catch (error) {
       console.error('Error toggling todo:', error);
     }
@@ -96,7 +96,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
               onChange={handleToggleClick}
               className="me-2"
             />
-            <span>{todo.title}</span>
+            <span style={todo.completed ? { textDecoration: 'line-through' } : {}}>
+              {todo.title}
+            </span>
           </div>
           <div>
             <button onClick={handleEditClick} className="btn btn-warning me-2">

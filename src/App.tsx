@@ -1,126 +1,135 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import TodoList from './components/TodoList';
 import config, { loadConfig } from './config';
 
 interface Todo {
-  id: string;
-  title: string;
-  completed: boolean;
+    id: string;
+    title: string;
+    completed: boolean;
 }
 
-const App: React.FC = () => {
+function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState<string>('');
-  const [configLoaded, setConfigLoaded] = useState(false);
+  const [title, setTitle] = useState<string>('');
 
   useEffect(() => {
-    loadConfig().then(() => {
-      setConfigLoaded(true);
-      fetchTodos().then(fetchedTodos => setTodos(fetchedTodos));
-    });
+    async function initialize() {
+      await loadConfig();
+      await fetchTodos();
+    }
+
+    initialize();
   }, []);
 
-  const fetchTodos = async (): Promise<Todo[]> => {
+  const fetchTodos = async () => {
     try {
       const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`);
-      const data = await response.json();
-      return data;
+      const todosData = await response.json();
+      setTodos(todosData);
     } catch (error) {
-      console.error("Error fetching todos:", error);
-      return [];
+      console.error('Failed to fetch todos:', error);
     }
   };
 
-  const handleAddTodo = async () => {
+  const addTodo = async (title: string) => {
+    if (title.trim() === "") {
+      console.warn("Todo title cannot be empty.");
+      return;
+    }
+
     try {
       const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title: newTodo }),
+        body: JSON.stringify({ title })
       });
 
-      const data = await response.json();
-      //setTodos([...todos, data]);
-      setTodos(prevTodos => [...prevTodos, data]);
-      setNewTodo('');
+      if (response.ok) {
+        await fetchTodos(); // Refetch the list to get the updated list
+      } else {
+        console.error('Failed to add todo:', await response.text());
+      }
+
+      setTitle(''); // Clear the input field after adding
     } catch (error) {
-      console.error("Error adding todo:", error);
+      console.error('Failed to add todo:', error);
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const deleteTodo = async (id: string) => {
     try {
-      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
         method: 'DELETE',
       });
-      setTodos(todos.filter(todo => todo.id !== id));
+
+      if (response.ok) {
+        await fetchTodos(); // Refetch the list to get the updated list
+      } else {
+        console.error('Failed to delete todo:', await response.text());
+      }
     } catch (error) {
-      console.error("Error deleting todo:", error);
+      console.error('Failed to delete todo:', error);
     }
   };
 
-  const handleToggle = async (id: string, completed: boolean) => {
+  const toggleTodo = async (id: string, completed: boolean) => {
     try {
-      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ completed: !completed }),
       });
-      const updatedTodos = todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !completed } : todo
-      );
-      setTodos(updatedTodos);
+
+      if (response.ok) {
+        await fetchTodos(); // Refetch the list to get the updated list
+      } else {
+        console.error('Failed to toggle todo:', await response.text());
+      }
     } catch (error) {
-      console.error("Error toggling todo:", error);
+      console.error('Failed to toggle todo:', error);
     }
   };
 
-  const handleUpdate = async (id: string, title: string) => {
+  const updateTodo = async (id: string, newTitle: string) => {
     try {
-      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title: newTitle }),
       });
-      const updatedTodos = todos.map(todo =>
-        todo.id === id ? { ...todo, title } : todo
-      );
-      setTodos(updatedTodos);
+
+      if (response.ok) {
+        await fetchTodos(); // Refetch the list to get the updated list
+      } else {
+        console.error('Failed to update todo:', await response.text());
+      }
     } catch (error) {
-      console.error("Error updating todo:", error);
+      console.error('Failed to update todo:', error);
     }
   };
 
-  if (!configLoaded) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="container mt-5">
+    <div className="App">
       <h1>Todo App</h1>
-      <div className="input-group my-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="New todo"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-        />
-        <button className="btn btn-primary" onClick={handleAddTodo}>
-          Add
-        </button>
-      </div>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Add a todo..."
+      />
+      <button onClick={() => addTodo(title)}>Add Todo</button>
       <TodoList
         todos={todos}
-        onDelete={handleDelete}
-        onToggle={handleToggle}
-        onUpdate={handleUpdate}
+        onDelete={deleteTodo}
+        onToggle={toggleTodo}
+        onUpdate={updateTodo}
       />
     </div>
   );
