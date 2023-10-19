@@ -53,7 +53,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
       if (!response.ok) {
         throw new Error('Failed to toggle todo');
       }
-      onToggle(todo.id, todo.completed);
+      onToggle(todo.id, !todo.completed);
     } catch (error) {
       console.error('Error toggling todo:', error);
     }
@@ -74,16 +74,16 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
   };
 
   return (
-    <div className="d-flex justify-content-between align-items-center my-2">
+    <div className="d-flex justify-content-between align-items-center my-2 border rounded p-2">
       {isEditing ? (
         <>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="form-control"
+            className="form-control me-2"
           />
-          <button onClick={handleSaveClick} className="btn btn-success ms-2">
+          <button onClick={handleSaveClick} className="btn btn-success">
             Save
           </button>
         </>
@@ -96,13 +96,15 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate 
               onChange={handleToggleClick}
               className="me-2"
             />
-            <span>{todo.title}</span>
+            <span className={`text-${todo.completed ? 'muted' : 'dark'}`} style={todo.completed ? { textDecoration: 'line-through' } : {}}>
+              {todo.title}
+            </span>
           </div>
           <div>
-            <button onClick={handleEditClick} className="btn btn-warning me-2">
+            <button onClick={handleEditClick} className="btn btn-warning btn-sm me-2">
               Edit
             </button>
-            <button onClick={handleDeleteClick} className="btn btn-danger">
+            <button onClick={handleDeleteClick} className="btn btn-danger btn-sm">
               Delete
             </button>
           </div>
