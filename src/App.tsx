@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TodoList from './components/TodoList';
-import config from './config';
+import config, { loadConfig } from './config';
 
 interface Todo {
   id: string;
@@ -10,62 +10,95 @@ interface Todo {
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState<string>("");
+  const [newTodo, setNewTodo] = useState<string>('');
+  const [configLoaded, setConfigLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch todos');
-        }
-        const data: Todo[] = await response.json();
-        setTodos(data);
-      } catch (error) {
-        console.error('Error fetching todos:', error);
-      }
-    };
-
-    fetchTodos();
+    loadConfig().then(() => {
+      setConfigLoaded(true);
+      fetchTodos().then(fetchedTodos => setTodos(fetchedTodos));
+    });
   }, []);
+
+  const fetchTodos = async (): Promise<Todo[]> => {
+    try {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      return [];
+    }
+  };
 
   const handleAddTodo = async () => {
     try {
-      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos`, {
+      const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ title: newTodo }),
       });
-      if (!response.ok) {
-        throw new Error('Failed to add todo');
-      }
-      const data: Todo = await response.json();
-      setTodos((prevTodos) => [...prevTodos, data]);
-      setNewTodo("");
+
+      const data = await response.json();
+      setTodos([...todos, data]);
+      setNewTodo('');
     } catch (error) {
-      console.error('Error adding todo:', error);
+      console.error("Error adding todo:", error);
     }
   };
 
-  const handleDelete = (id: string) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+        method: 'DELETE',
+      });
+      setTodos(todos.filter(todo => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
   };
 
-  const handleToggle = (id: string, completed: boolean) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
+  const handleToggle = async (id: string, completed: boolean) => {
+    try {
+      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ completed: !completed }),
+      });
+      const updatedTodos = todos.map(todo =>
         todo.id === id ? { ...todo, completed: !completed } : todo
-      )
-    );
+      );
+      setTodos(updatedTodos);
+    } catch (error) {
+      console.error("Error toggling todo:", error);
+    }
   };
 
-  const handleUpdate = (id: string, title: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === id ? { ...todo, title } : todo))
-    );
+  const handleUpdate = async (id: string, title: string) => {
+    try {
+      await fetch(`${config.REACT_APP_BACKEND_URL}/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title }),
+      });
+      const updatedTodos = todos.map(todo =>
+        todo.id === id ? { ...todo, title } : todo
+      );
+      setTodos(updatedTodos);
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
   };
+
+  if (!configLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mt-5">
@@ -90,6 +123,6 @@ const App: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default App;
