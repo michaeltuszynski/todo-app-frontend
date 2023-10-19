@@ -56,16 +56,19 @@ const TodoList: React.FC<TodoListProps> = ({ onDelete, onToggle, onUpdate }) => 
   };
 
   return (
-    <div>
-      {todos.map(todo => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onDelete={handleDelete}
-          onToggle={handleToggle}
-          onUpdate={handleUpdate}
-        />
-      ))}
+    <div className="container mt-4">
+      <h2 className="text-center mb-4">Todo List</h2>
+      <div className="list-group">
+        {todos.map(todo => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onDelete={handleDelete}
+            onToggle={handleToggle}
+            onUpdate={handleUpdate}
+          />
+        ))}
+      </div>
     </div>
   );
 };
