@@ -15,7 +15,7 @@ export const loadConfig = async () => {
     } catch (error) {
         console.error('Error loading config.json file:', error);
     }
-}
+}   
 
 
 export default configExports;

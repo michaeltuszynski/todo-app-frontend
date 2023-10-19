@@ -133,6 +133,7 @@ function App() {
         </div>
       </div>
       <TodoList
+        backendUrl={config.REACT_APP_BACKEND_URL || "localhost:5000"}
         todos={todos}
         onDelete={deleteTodo}
         onToggle={toggleTodo}

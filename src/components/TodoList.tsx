@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import config from '../config';
 import TodoItem from './TodoItem';
 
 interface Todo {
@@ -9,19 +8,20 @@ interface Todo {
 }
 
 interface TodoListProps {
+    backendUrl?: string;
     todos: Todo[];
     onDelete: (id: string) => void;
     onToggle: (id: string, completed: boolean) => void;
     onUpdate: (id: string, title: string) => void;
   }
 
-const TodoList: React.FC<TodoListProps> = ({ onDelete, onToggle, onUpdate }) => {
+const TodoList: React.FC<TodoListProps> = ({ backendUrl, onDelete, onToggle, onUpdate }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const response = await fetch(`${config.REACT_APP_BACKEND_URL}/todos`);
+        const response = await fetch(`${backendUrl}/todos`);
         if (!response.ok) {
           throw new Error('Failed to fetch todos');
         }
