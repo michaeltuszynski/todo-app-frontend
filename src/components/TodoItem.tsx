@@ -1,66 +1,113 @@
 import React, { useState } from 'react';
 import config from '../config';
 
-interface TodoItemProps {
+interface Todo {
   id: string;
   title: string;
   completed: boolean;
-  fetchTodos: () => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ id, title, completed, fetchTodos }) => {
+interface TodoItemProps {
+  todo: Todo;
+  onDelete: (id: string) => void;
+  onToggle: (id: string, completed: boolean) => void;
+  onUpdate: (id: string, title: string) => void;
+}
+
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onDelete, onToggle, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(title);
-  const API_URL = config.REACT_APP_BACKEND_URL;
+  const [title, setTitle] = useState(todo.title);
 
-  const handleToggle = () => {
-    fetch(`${API_URL}/todos/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed: !completed }),
-    })
-    .then(fetchTodos);
+  const handleEditClick = () => {
+    setIsEditing(true);
   };
 
-  const handleEdit = () => {
-    fetch(`${API_URL}/todos/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: editedTitle }),
-    })
-    .then(() => {
+  const handleSaveClick = async () => {
+    try {
+      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, completed: todo.completed }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update todo');
+      }
+      onUpdate(todo.id, title);
       setIsEditing(false);
-      fetchTodos();
-    });
+    } catch (error) {
+      console.error('Error updating todo:', error);
+    }
   };
 
-  const handleDelete = () => {
-    fetch(`${API_URL}/todos/${id}`, {
-      method: 'DELETE'
-    })
-    .then(fetchTodos);
+  const handleToggleClick = async () => {
+    try {
+      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: todo.title, completed: !todo.completed }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to toggle todo');
+      }
+      onToggle(todo.id, todo.completed);
+    } catch (error) {
+      console.error('Error toggling todo:', error);
+    }
   };
 
-  if (isEditing) {
-    return (
-      <div className="card mb-2">
-        <div className="card-body">
-          <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
-          <button onClick={handleEdit}>Save</button>
-          <button onClick={() => setIsEditing(false)}>Cancel</button>
-        </div>
-      </div>
-    );
-  }
+  const handleDeleteClick = async () => {
+    try {
+      const response = await fetch(`http://${config.REACT_APP_BACKEND_URL}/todos/${todo.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete todo');
+      }
+      onDelete(todo.id);
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+    }
+  };
 
   return (
-    <div className="card mb-2">
-      <div className="card-body">
-        <input type="checkbox" checked={completed} onChange={handleToggle} />
-        <h5 className={`card-title ${completed ? 'text-muted' : ''}`}>{title}</h5>
-        <button onClick={() => setIsEditing(true)}>Edit</button>
-        <button onClick={handleDelete}>Delete</button>
-      </div>
+    <div className="d-flex justify-content-between align-items-center my-2">
+      {isEditing ? (
+        <>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="form-control"
+          />
+          <button onClick={handleSaveClick} className="btn btn-success ms-2">
+            Save
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="d-flex align-items-center">
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={handleToggleClick}
+              className="me-2"
+            />
+            <span>{todo.title}</span>
+          </div>
+          <div>
+            <button onClick={handleEditClick} className="btn btn-warning me-2">
+              Edit
+            </button>
+            <button onClick={handleDeleteClick} className="btn btn-danger">
+              Delete
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
