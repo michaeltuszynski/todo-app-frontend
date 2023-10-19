@@ -48,12 +48,12 @@ function App() {
       });
 
       if (response.ok) {
-        await fetchTodos(); // Refetch the list to get the updated list
+        const newTodo = await response.json();
+        setTodos([...todos, { id: newTodo.id, title, completed: false }]);
+        setTitle(''); // Clear the input field after adding
       } else {
         console.error('Failed to add todo:', await response.text());
       }
-
-      setTitle(''); // Clear the input field after adding
     } catch (error) {
       console.error('Failed to add todo:', error);
     }
