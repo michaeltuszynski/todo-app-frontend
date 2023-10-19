@@ -44,5 +44,5 @@ jobs:
             destination: 'todoapp-static-website-bucket'
             parent: false
             headers: |-
-              Content-Type:application/octet-stream
-              Cache-Control:no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+              content-type: application/octet-stream
+              cache-control: no-cache, no-store, max-age=0, must-revalidate
